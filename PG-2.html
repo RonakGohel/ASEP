@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - NovaVault</title>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      display: flex; justify-content: center; align-items: center;
+      height: 100vh; margin: 0; background-color: #0f1222; color: white;
+    }
+    .login-container {
+      background: #161a2f; padding: 40px; border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5); width: 350px; border: 1px solid #2a3154;
+    }
+    .login-container h2 { text-align: center; margin-bottom: 30px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; color: #a8b0c2; }
+    .form-group input {
+      width: 100%; padding: 12px; border: 1px solid #2a3154; border-radius: 10px;
+      background: #0f1328; color: white; box-sizing: border-box;
+    }
+    .btn {
+      width: 100%; padding: 14px; background: linear-gradient(135deg, #7c5cff, #4ad4ff);
+      border: none; border-radius: 12px; color: #0b0f1a; font-weight: bold;
+      cursor: pointer; font-size: 16px; transition: 0.3s;
+    }
+    .btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <h2>Login to NovaVault</h2>
+    <div class="form-group">
+      <label for="username">Email Address</label>
+      <input type="text" id="username" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" placeholder="••••••••">
+    </div>
+    <button class="btn" onclick="HandleLogin()">Login</button>
+    <p style="text-align:center; font-size:14px; margin-top:20px;">
+      <a href="PG-1.html" style="color:#4ad4ff; text-decoration:none;">Back to Registration</a>
+    </p>
+  </div>
+
+  <script>
+    function HandleLogin() {
+        const userInp = document.getElementById("username").value;
+        const passInp = document.getElementById("password").value;
+        
+        const users = JSON.parse(localStorage.getItem('novaUsers') || '[]');
+        const user = users.find(u => u.email === userInp && u.password === passInp);
+
+        if (user) {
+            // Save current user session details
+            sessionStorage.setItem('currentMasterKey', user.masterKey);
+            sessionStorage.setItem('currentUserEmail', user.email);
+            
+            alert("Login Successful! Redirecting to Vault...");
+            window.location.href = "Home_Page.html"; 
+        } else {
+            alert("Invalid Email or Password. Please try again.");
+        }
+
+        sessionStorage.setItem('currentUserEmail', user.email); // Must match script.js exactly
+    }
+  </script>
+</body>
+</html>

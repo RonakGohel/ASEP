@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NovaVault - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{
+      --bg:#0f1222; --card:#161a2f; --accent:#7c5cff; --accent-2:#4ad4ff;
+      --text:#e8eaed; --muted:#a8b0c2; --success:#3bd671; --danger:#ff5c7a;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter, sans-serif; color:var(--text); background: var(--bg);
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    .container{ max-width:1100px; margin:0 auto; padding:32px 20px; flex: 1; }
+    header{ display:flex; align-items:center; justify-content:space-between; padding-bottom: 24px; }
+    .brand{ display:flex; align-items:center; gap:12px; }
+    .logo{ width:40px; height:40px; border-radius:12px; background:linear-gradient(135deg, var(--accent), var(--accent-2)); }
+    .nav{ display:flex; gap:10px; }
+    .btn{
+      cursor:pointer; font-weight:600; border-radius:12px; padding:10px 16px; border:none;
+      color:var(--text); background:#232845; transition: 0.2s;
+    }
+    .btn-primary{ background:linear-gradient(135deg, var(--accent), var(--accent-2)); color:#0b0f1a; }
+    .modal-backdrop{
+      position:fixed; inset:0; background:#000000aa; backdrop-filter:blur(4px);
+      display:none; align-items:center; justify-content:center; z-index:50;
+    }
+    .modal{ width:100%; max-width:500px; background:#121631; border-radius:18px; border:1px solid #2a3154; padding:24px; }
+    .form{ display:grid; gap:15px; }
+    .form input{ padding:12px; border-radius:10px; border:1px solid #2a3154; background:#0f1328; color:white; width:100%; }
+    .tabs{ display:flex; gap:10px; margin-bottom: 20px; }
+    .tab{ flex:1; padding:10px; background:#232845; color:var(--muted); border-radius:8px; cursor:pointer; text-align:center; }
+    .tab.active{ background:var(--accent); color:white; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo"></div>
+        <h1>NovaVault</h1>
+      </div>
+      <nav class="nav">
+        <button class="btn" id="open-auth">Login / Register</button>
+        <a href="Constraints.html">
+          <button class="btn btn-primary">Password Generator</button>
+        </a>
+      </nav>
+    </header>
+
+    <main style="text-align: center; margin-top: 100px;">
+      <h2>Welcome to NovaVault</h2>
+      <p style="color:var(--muted)">Your secure, constraint-based password management solution.</p>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="auth-modal">
+    <div class="modal">
+      <div class="tabs">
+        <div class="tab active" id="tab-login-btn">Login</div>
+        <div class="tab" id="tab-reg-btn">Register</div>
+      </div>
+
+      <form class="form" id="register-form" style="display:none">
+        <input type="text" id="reg-name" placeholder="Full Name" required>
+        <input type="email" id="reg-email" placeholder="Email Address" required>
+        <input type="password" id="reg-pass" placeholder="Password" required>
+        <input type="password" id="reg-confirm" placeholder="Confirm Password" required>
+        <button type="submit" class="btn btn-primary">Create Account</button>
+      </form>
+
+      <div id="login-info" style="text-align:center; color:var(--muted);">
+        <p>Already have an account?</p>
+        <a href="PG-2.html"><button class="btn btn-primary">Go to Login Page</button></a>
+      </div>
+      
+      <button class="btn" style="margin-top:20px; width:100%" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    const modal = document.getElementById('auth-modal');
+    const regForm = document.getElementById('register-form');
+    const loginInfo = document.getElementById('login-info');
+    const tabReg = document.getElementById('tab-reg-btn');
+    const tabLogin = document.getElementById('tab-login-btn');
+
+    document.getElementById('open-auth').onclick = () => modal.style.display = 'flex';
+    function closeModal() { modal.style.display = 'none'; }
+
+    tabReg.onclick = () => {
+      tabReg.classList.add('active'); tabLogin.classList.remove('active');
+      regForm.style.display = 'grid'; loginInfo.style.display = 'none';
+    };
+    tabLogin.onclick = () => {
+      tabLogin.classList.add('active'); tabReg.classList.remove('active');
+      regForm.style.display = 'none'; loginInfo.style.display = 'block';
+    };
+
+    regForm.onsubmit = (e) => {
+      e.preventDefault();
+      const pass = document.getElementById('reg-pass').value;
+      const confirm = document.getElementById('reg-confirm').value;
+
+      if(pass !== confirm) return alert("Passwords don't match!");
+
+      const masterKey = prompt("Set your unique Master Key (required to unlock your passwords later):");
+      if(!masterKey) return alert("Account creation cancelled: Master Key is required.");
+
+      const users = JSON.parse(localStorage.getItem('novaUsers') || '[]');
+      const email = document.getElementById('reg-email').value;
+
+      if(users.find(u => u.email === email)) return alert("User already exists!");
+
+      users.push({
+        email: email,
+        password: pass,
+        name: document.getElementById('reg-name').value,
+        masterKey: masterKey // In real app, hash this
+      });
+
+      localStorage.setItem('novaUsers', JSON.stringify(users));
+      alert("Registration Successful!");
+      window.location.href = "PG-2.html";
+    };
+  </script>
+</body>
+</html>

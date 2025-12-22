@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<head>
+    <title>
+        Set Password Constraints
+    </title>
+
+    <link rel="stylesheet" href="Constraints_Style.css">
+</head>
+
+
+<body>
+    <h1>🔒 Set Your Password Constraints</h1>
+
+    <p>
+        Enter the number of constraints you want in your passwords.
+    </p>
+
+    <div>
+        <input type="number" id="numConstraints" min="1" max="5" placeholder="Number (1-5)">
+        <button onclick="createConstraintInputs()">Set Number</button>
+
+        <div id="constraintInputs"></div> <button id="submitConstraints" onclick="saveConstraints()">Go to Generator</button>
+    </div>
+
+    <br>
+    <hr>
+    <br>
+
+    <div id="constraintInputs">
+        </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
