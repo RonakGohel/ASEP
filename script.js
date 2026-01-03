@@ -255,5 +255,6 @@ function handleLogout() {
 
     // 2. Alert the user and redirect to the landing page
     alert("You have been logged out successfully.");
-    window.location.href = "PG-1.html";
+    window.location.href = "index.html";
+
 }
